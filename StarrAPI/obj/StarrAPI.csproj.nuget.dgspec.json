@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\admin\\DreamStarr\\StarrAPI\\StarrAPI.csproj": {}
+    "C:\\Users\\admin\\DreamStarr\\starrapi\\StarrAPI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\admin\\DreamStarr\\StarrAPI\\StarrAPI.csproj": {
+    "C:\\Users\\admin\\DreamStarr\\starrapi\\StarrAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\admin\\DreamStarr\\StarrAPI\\StarrAPI.csproj",
+        "projectUniqueName": "C:\\Users\\admin\\DreamStarr\\starrapi\\StarrAPI.csproj",
         "projectName": "StarrAPI",
-        "projectPath": "C:\\Users\\admin\\DreamStarr\\StarrAPI\\StarrAPI.csproj",
+        "projectPath": "C:\\Users\\admin\\DreamStarr\\starrapi\\StarrAPI.csproj",
         "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\admin\\DreamStarr\\StarrAPI\\obj\\",
+        "outputPath": "C:\\Users\\admin\\DreamStarr\\starrapi\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -43,6 +43,10 @@
         "net5.0": {
           "targetAlias": "net5.0",
           "dependencies": {
+            "AutoMapper.Extensions.Microsoft.DependencyInjection": {
+              "target": "Package",
+              "version": "[8.1.1, )"
+            },
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
               "version": "[5.0.7, )"

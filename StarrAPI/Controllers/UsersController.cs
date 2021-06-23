@@ -1,39 +1,46 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StarrAPI.Data;
+using StarrAPI.Data.Interfaces;
+using StarrAPI.DTOs;
 using StarrAPI.Models;
+
 
 namespace StarrAPI.Controllers
 {
 
+    [Authorize]
     public class UsersController : BaseAPIController
     {
+        private readonly IUserRepository _userRepository;
+        private readonly IMapper _Mapper;
 
-        private readonly ApplicationDbContext _context;
-
-        public UsersController(ApplicationDbContext context)
+        public UsersController(IUserRepository userRepository, IMapper Mapper)
         {
-            _context = context;
+            _Mapper = Mapper;
+            _userRepository = userRepository;
+
 
         }
 
         [HttpGet]
-        [AllowAnonymous]
-        public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers()
+        //[AllowAnonymous]
+        public async Task<ActionResult<IEnumerable<MemberDTO>>> GetUsers()
         {
-              return await _context.GetAppUsers.ToListAsync();
+       
+            return Ok(await _userRepository.GetMembersDTOAsync());
         }
 
-        [HttpGet("{Id}")]
-        [Authorize]
-        public async Task<ActionResult<AppUser>> GetUser(int Id)
-        {
-            return await _context.GetAppUsers.FirstOrDefaultAsync(u => u.UserId == Id);
-            
+        [HttpGet("{Username}")]
+
+        public async Task<ActionResult<MemberDTO>> GetUser(string Username)
+        {            
+            return await _userRepository.GetMemberDTOAsync(Username);
         }
     }
 }
