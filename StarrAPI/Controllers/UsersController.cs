@@ -111,7 +111,7 @@ namespace StarrAPI.Controllers
             var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername());
             var photo = user.Photos.FirstOrDefault(p => p.ID == photoId);
             if(photo == null) return NotFound();
-            if(photo.MainPic) return BadRequest("You cant delete main photo");
+            if(photo.MainPic) return BadRequest("You cant delete main photo!");
             if(photo.PublicId != null)
             {
                 var results = await _photoService.DeletePhotoAsync(photo.PublicId); 
