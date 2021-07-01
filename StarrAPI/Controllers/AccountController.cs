@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -46,7 +47,9 @@ namespace StarrAPI.Controllers
         public async Task<ActionResult<TokenDTO>> Login(LoginDTO loginDTO)
         {
             //Retrieve the Current User.
-            var User = await _context.GetAppUsers.FirstOrDefaultAsync(u => u.Username == loginDTO.Username);
+            var User = await _context.GetAppUsers
+            .Include(p =>p.Photos)
+            .FirstOrDefaultAsync(u => u.Username == loginDTO.Username);
             //If User is null, returning Unauthorized.
             if (User == null) return Unauthorized("You're not authorized! Invalid Username");
             //Accessing the Password Algorithm & disposing of it when done with using statement.
@@ -61,7 +64,8 @@ namespace StarrAPI.Controllers
             return new TokenDTO
             {
                 Username = User.Username,
-                Token = _tokenService.CreateToken(User)
+                Token = _tokenService.CreateToken(User),
+                PhotoUrl = User.Photos.FirstOrDefault(x => x.MainPic)?.PhotoUrl
             };
         }
 

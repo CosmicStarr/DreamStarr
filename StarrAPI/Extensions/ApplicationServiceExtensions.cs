@@ -13,6 +13,8 @@ namespace StarrAPI.Extensions
     {
         public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration Configuration)
         {
+            services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
+            services.AddScoped<IPhotoUpload,PhotoService>();
             services.AddScoped<ITokenService,TokenService>();
             services.AddScoped<IUserRepository,UserRepository>();
             services.AddAutoMapper(typeof(AutoMapProfiles).Assembly);
