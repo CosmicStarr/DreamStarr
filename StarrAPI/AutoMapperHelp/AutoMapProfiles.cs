@@ -14,6 +14,7 @@ namespace StarrAPI.AutoMapperHelp
                                           .ForMember(d => d.Age, o => o.MapFrom(s => s.DateOfBirth.CalulateAge()));
             CreateMap<Photos,PhotosDTO>();
             CreateMap<MemberUpdateDTO,AppUser>();
+            CreateMap<AppUserDTO,AppUser>();
         }
     }
 }

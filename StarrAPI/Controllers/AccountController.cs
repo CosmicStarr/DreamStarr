@@ -2,6 +2,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StarrAPI.Data;
@@ -16,9 +17,11 @@ namespace StarrAPI.Controllers
         private readonly ApplicationDbContext _context;
 
         private readonly ITokenService _tokenService;
+        private readonly IMapper _mapper;
 
-        public AccountController(ApplicationDbContext context, ITokenService tokenService)
+        public AccountController(ApplicationDbContext context, ITokenService tokenService, IMapper mapper)
         {
+            _mapper = mapper;
             _tokenService = tokenService;
             _context = context;
         }
@@ -27,19 +30,20 @@ namespace StarrAPI.Controllers
         public async Task<ActionResult<TokenDTO>> Register(AppUserDTO appUserDTO)
         {
             if (await UserExist(appUserDTO.Username)) return BadRequest("Username is taken!");
+            var user = _mapper.Map<AppUser>(appUserDTO);
             using var HMAC12 = new HMACSHA512();
-            var user = new AppUser
-            {
-                Username = appUserDTO.Username.ToLower(),
-                PasswordHash = HMAC12.ComputeHash(Encoding.UTF8.GetBytes(appUserDTO.Password)),
-                PasswordSalt = HMAC12.Key
-            };
+       
+            user.Username = appUserDTO.Username.ToLower();
+            user.PasswordHash = HMAC12.ComputeHash(Encoding.UTF8.GetBytes(appUserDTO.Password));
+            user.PasswordSalt = HMAC12.Key;
+         
             _context.Add(user);
             await _context.SaveChangesAsync();
             return new TokenDTO
             {
                 Username = user.Username,
-                Token = _tokenService.CreateToken(user)
+                Token = _tokenService.CreateToken(user),
+                AlsoknownAs = user.AlsoKnownAs
             };
         }
 
@@ -48,7 +52,7 @@ namespace StarrAPI.Controllers
         {
             //Retrieve the Current User.
             var User = await _context.GetAppUsers
-            .Include(p =>p.Photos)
+            .Include(p => p.Photos)
             .FirstOrDefaultAsync(u => u.Username == loginDTO.Username);
             //If User is null, returning Unauthorized.
             if (User == null) return Unauthorized("You're not authorized! Invalid Username");
@@ -56,7 +60,7 @@ namespace StarrAPI.Controllers
             using var HMAC12 = new HMACSHA512(User.PasswordSalt);
             //Retrieving password bytes created by password Algorithm that match password salt.
             var ComputeHash = HMAC12.ComputeHash(Encoding.UTF8.GetBytes(loginDTO.Password));
-            //iterating through byte data to find matching Paswword Salt & Hash that was created when the Current User Registered.
+            //iterating through byte data to find matching Password Salt & Hash that was created when the Current User Registered.
             for (int i = 0; i < ComputeHash.Length; i++)
             {
                 if (ComputeHash[i] != User.PasswordHash[i]) return Unauthorized("You're not authorized! Invalid Password!");
@@ -65,7 +69,8 @@ namespace StarrAPI.Controllers
             {
                 Username = User.Username,
                 Token = _tokenService.CreateToken(User),
-                PhotoUrl = User.Photos.FirstOrDefault(x => x.MainPic)?.PhotoUrl
+                PhotoUrl = User.Photos.FirstOrDefault(x => x.MainPic)?.PhotoUrl,
+                AlsoknownAs = User.AlsoKnownAs
             };
         }
 
