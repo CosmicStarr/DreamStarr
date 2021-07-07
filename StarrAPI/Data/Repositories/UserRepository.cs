@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using StarrAPI.AutoMapperHelp;
 using StarrAPI.Data.Interfaces;
 using StarrAPI.DTOs;
 using StarrAPI.Models;
@@ -29,11 +31,26 @@ namespace StarrAPI.Data.Repositories
             .FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<MemberDTO>> GetMembersDTOAsync()
+        public async Task<PagerList<MemberDTO>> GetMembersDTOAsync(UserParams userParams )
         {
-            return await _Context.GetAppUsers
-            .ProjectTo<MemberDTO>(_mapper.ConfigurationProvider)
-            .ToListAsync();
+            var query = _Context.GetAppUsers.AsQueryable();
+            query = query.Where(u =>u.Username != userParams.CurrentUsername);
+            query = query.Where(u =>u.Gender == userParams.Gender);
+
+            var minDOB = DateTime.Today.AddYears(-userParams.MaxAge - 1);
+            var maxDOB = DateTime.Today.AddYears(-userParams.MinAge);
+
+            query = query.Where(u => u.DateOfBirth >= minDOB && u.DateOfBirth <= maxDOB);
+            query = userParams.Orderby switch
+            {
+                "profileCreated" => query.OrderByDescending(u => u.ProfileCreated),
+                 _=> query.OrderByDescending(u => u.LastActive) 
+            };
+            
+            return await PagerList<MemberDTO>.CreateAsync(query.ProjectTo<MemberDTO>
+            (_mapper.ConfigurationProvider)
+            .AsNoTracking()
+            ,userParams.PageNumber,userParams.PageSize);    
         }
 
         public async Task<AppUser> GetUserByIdAsync(int Id)

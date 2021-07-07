@@ -43,7 +43,8 @@ namespace StarrAPI.Controllers
             {
                 Username = user.Username,
                 Token = _tokenService.CreateToken(user),
-                AlsoknownAs = user.AlsoKnownAs
+                AlsoknownAs = user.AlsoKnownAs,
+                Gender = user.Gender              
             };
         }
 
@@ -70,7 +71,8 @@ namespace StarrAPI.Controllers
                 Username = User.Username,
                 Token = _tokenService.CreateToken(User),
                 PhotoUrl = User.Photos.FirstOrDefault(x => x.MainPic)?.PhotoUrl,
-                AlsoknownAs = User.AlsoKnownAs
+                AlsoknownAs = User.AlsoKnownAs,
+                Gender = User.Gender
             };
         }
 

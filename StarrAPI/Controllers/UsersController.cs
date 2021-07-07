@@ -33,10 +33,17 @@ namespace StarrAPI.Controllers
 
         [HttpGet]
         //[AllowAnonymous]
-        public async Task<ActionResult<IEnumerable<MemberDTO>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<MemberDTO>>> GetUsers([FromQuery]UserParams userParams)
         {
+            var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername());
+            userParams.CurrentUsername = user.Username;
+            if(string.IsNullOrEmpty(userParams.Gender))
+                userParams.Gender = user.Gender == "male"?"female":"male";
+            var users = await _userRepository.GetMembersDTOAsync(userParams);
+            Response.AddPaginationHeader(users.CurrentPage,users.PageSize,users.TotalCount,users.TotalPages);
 
-            return Ok(await _userRepository.GetMembersDTOAsync());
+            return Ok(users);
+   
         }
 
         [HttpGet("{Username}", Name ="GetUser")]

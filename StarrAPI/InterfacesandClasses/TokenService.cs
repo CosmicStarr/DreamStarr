@@ -19,10 +19,11 @@ namespace StarrAPI.InterfacesandClasses
 
         public string CreateToken(AppUser appUser)
         {
-            //Adding Claims. Meaning who this Current user Claims to be. In this case the Username.
+            //Adding Claims. Meaning whoever this Current user Claims to be. In this case the Username+.
             var ClaimsList = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.NameId, appUser.Username)
+                new Claim(JwtRegisteredClaimNames.NameId, appUser.UserId.ToString()),
+                new Claim(JwtRegisteredClaimNames.UniqueName, appUser.Username),
             };
             //Creating the Credentials for the current User.
             var credentials = new SigningCredentials(_Key, SecurityAlgorithms.HmacSha512Signature);
