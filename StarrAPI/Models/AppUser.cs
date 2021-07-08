@@ -23,10 +23,10 @@ namespace StarrAPI.Models
         public string City { get; set; }
         public string Country { get; set; }
         public ICollection<Photos> Photos { get; set; }
+        //List of Users that Liked the Current User
+        public ICollection<UserLikes> LikedByUsers {get; set;}
+        //List of Users that the Current User Likes
+        public ICollection<UserLikes> LikedUsers { get; set; }
 
-        /*public int GetAge()
-        {
-            return DateOfBirth.CalulateAge();      
-        }*/
     }
 }
