@@ -12,6 +12,7 @@ namespace StarrAPI.Data
 
         public DbSet<AppUser> GetAppUsers { get; set; } 
         public DbSet<UserLikes> Likes { get; set; }
+        public DbSet<Messages> Messages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -31,6 +32,17 @@ namespace StarrAPI.Data
             .WithMany(w => w.LikedByUsers)
             .HasForeignKey(f => f.LikedUserId)
             .OnDelete(DeleteBehavior.NoAction);
+
+
+            builder.Entity<Messages>()
+            .HasOne(u =>u.Recipient)
+            .WithMany(m => m.MessagesReceived)
+            .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Messages>()
+            .HasOne(u =>u.Sender)
+            .WithMany(m => m.MessagesSent)
+            .OnDelete(DeleteBehavior.Restrict);
             
         }
     }

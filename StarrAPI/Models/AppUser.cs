@@ -27,6 +27,8 @@ namespace StarrAPI.Models
         public ICollection<UserLikes> LikedByUsers {get; set;}
         //List of Users that the Current User Likes
         public ICollection<UserLikes> LikedUsers { get; set; }
+        public ICollection<Messages> MessagesSent { get; set; }
+        public ICollection<Messages> MessagesReceived { get; set; }
 
     }
 }

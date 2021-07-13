@@ -4,7 +4,7 @@ namespace StarrAPI.AutoMapperHelp
     {
         private const int MaxPageSize = 50;
         public int PageNumber {get; set;} = 1;
-        private int _PageSize = 5;
+        private int _PageSize = 20;
 
         public int PageSize
         {

@@ -15,6 +15,9 @@ namespace StarrAPI.AutoMapperHelp
             CreateMap<Photos,PhotosDTO>();
             CreateMap<MemberUpdateDTO,AppUser>();
             CreateMap<AppUserDTO,AppUser>();
+            CreateMap<Messages,MessagesDTO>()
+            .ForMember(d => d.SenderPhotoUrl,o => o.MapFrom(s => s.Sender.Photos.FirstOrDefault(x => x.MainPic).PhotoUrl))
+            .ForMember(d => d.RecipientPhotoUrl,o => o.MapFrom(s => s.Recipient.Photos.FirstOrDefault(x => x.MainPic).PhotoUrl));
         }
     }
 }

@@ -11,7 +11,7 @@ namespace StarrAPI.AutoMapperHelp
         public PagerList(IEnumerable<T> Items, int Count, int pageNumber, int pageSize)
         {
             CurrentPage = pageNumber;
-            TotalPages = (int)Math.Ceiling(Count/(double) pageSize);
+            TotalPages = (int)Math.Ceiling(Count/(decimal) pageSize);
             PageSize = pageSize;
             TotalCount = Count;
             AddRange(Items);
@@ -22,7 +22,7 @@ namespace StarrAPI.AutoMapperHelp
         public int PageSize { get; set; }
         public int TotalCount { get; set; }
 
-        public static async Task<PagerList<T>> CreateAsync(IQueryable<T> source, int pageNumber, int pageSize)
+        public static async Task<PagerList<T>>CreateAsync(IQueryable<T> source, int pageNumber, int pageSize)
         {
             var count = await source.CountAsync();
             var items = await source.Skip((pageNumber -1) * pageSize).Take(pageSize).ToListAsync();
