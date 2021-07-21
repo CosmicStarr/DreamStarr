@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using StarrAPI.Data;
+using StarrAPI.Models;
 
 namespace StarrAPI
 {
@@ -22,8 +24,10 @@ namespace StarrAPI
             try
             {
                 var DataContext = Services.GetRequiredService<ApplicationDbContext>();
+                var userManager = Services.GetRequiredService<UserManager<AppUser>>();
+                var roleManager = Services.GetRequiredService<RoleManager<AppRole>>();
                 await DataContext.Database.MigrateAsync();
-                await Seed.SeedUsers(DataContext);
+                await Seed.SeedUsers(userManager,roleManager);
             }
             catch(Exception Ex)
             {

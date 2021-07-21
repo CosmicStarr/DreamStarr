@@ -25,16 +25,16 @@ namespace StarrAPI.Data.Repositories
 
         public async Task<MemberDTO> GetMemberDTOAsync(string username)
         {
-             return await _Context.GetAppUsers
-            .Where(x => x.Username == username)
+             return await _Context.Users
+            .Where(x => x.UserName == username)
             .ProjectTo<MemberDTO>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync();
         }
 
         public async Task<PagerList<MemberDTO>> GetMembersDTOAsync(UserParams userParams )
         {
-            var query = _Context.GetAppUsers.AsQueryable();
-            query = query.Where(u =>u.Username != userParams.CurrentUsername);
+            var query = _Context.Users.AsQueryable();
+            query = query.Where(u =>u.UserName != userParams.CurrentUsername);
             query = query.Where(u =>u.Gender == userParams.Gender);
 
             var minDOB = DateTime.Today.AddYears(-userParams.MaxAge - 1);
@@ -55,19 +55,19 @@ namespace StarrAPI.Data.Repositories
 
         public async Task<AppUser> GetUserByIdAsync(int Id)
         {
-            return await _Context.GetAppUsers.FirstOrDefaultAsync(i => i.UserId == Id);
+            return await _Context.Users.FirstOrDefaultAsync(i => i.Id == Id);
         }
 
         public async Task<AppUser> GetUserByUsernameAsync(string username)
         {
-            return await _Context.GetAppUsers
+            return await _Context.Users
             .Include(p => p.Photos)
-            .FirstOrDefaultAsync(u => u.Username == username);
+            .FirstOrDefaultAsync(u => u.UserName == username);
         }
 
         public async Task<IEnumerable<AppUser>> GetUsersAsync()
         {
-            return await _Context.GetAppUsers
+            return await _Context.Users
             .Include(p => p.Photos)
             .ToListAsync();
         }

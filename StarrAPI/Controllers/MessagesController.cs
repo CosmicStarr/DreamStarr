@@ -41,8 +41,8 @@ namespace StarrAPI.Controllers
             {
                 Sender = sender,
                 Recipient = recipient,
-                SenderUserName = sender.Username,
-                RecipientUsername = recipient.Username,
+                SenderUserName = sender.UserName,
+                RecipientUsername = recipient.UserName,
                 Content = createMessagesDTO.Content
             };
 
@@ -72,10 +72,9 @@ namespace StarrAPI.Controllers
         {         
             var username = User.GetUsername();
             var msg = await _messagesRepository.GetMessage(id);
-            if(msg == null) return NotFound();
-            if(msg.Sender.Username != username && msg.Recipient.Username != username) return Unauthorized();
-            if(msg.Sender.Username == username) msg.SenderDelete = true;
-            if(msg.Recipient.Username == username) msg.RecipientDelete = true;
+            if(msg.Sender.UserName != username && msg.Recipient.UserName != username) return Unauthorized();
+            if(msg.Sender.UserName == username) msg.SenderDelete = true;
+            if(msg.Recipient.UserName == username) msg.RecipientDelete = true;
             if(msg.SenderDelete && msg.RecipientDelete) _messagesRepository.DeleteMessage(msg);
             if(await _messagesRepository.SaveAllAsync()) return Ok();
             return BadRequest("There was a problem trying to delete your message!");

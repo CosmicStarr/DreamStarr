@@ -24,7 +24,7 @@ namespace StarrAPI.Controllers
         [HttpGet("Not-Found")]
         public ActionResult<AppUser> GetNotFound()
         {
-            var thing =_dbContext.GetAppUsers.Find(-1);
+            var thing =_dbContext.Users.Find(-1);
             if(thing == null)
             return NotFound(thing);   
             return Ok("Wow!");
@@ -33,7 +33,7 @@ namespace StarrAPI.Controllers
         [HttpGet("Server-Error") ]
         public ActionResult<string> GetServerError()
         {
-            var thing =_dbContext.GetAppUsers.Find(-1);
+            var thing =_dbContext.Users.Find(-1);
             var thingtoreturn = thing.ToString();
             return thingtoreturn;
         }

@@ -37,7 +37,7 @@ namespace StarrAPI.Data.Repositories
             var Msg = await _Context.Messages
             .Include(x => x.Sender)
             .Include(x => x.Recipient)
-            .FirstOrDefaultAsync(x => x.Messageid == Id);
+            .FirstOrDefaultAsync(x => x.MessageId == Id);
             return Msg;
         }
 
@@ -64,11 +64,11 @@ namespace StarrAPI.Data.Repositories
             .Where(m =>m.RecipientUsername == CurrentUsername && m.RecipientDelete == false
             && m.SenderUserName == RecipientUsername 
             || m.RecipientUsername == RecipientUsername 
-            && m.Sender.Username == CurrentUsername && m.SenderDelete == false)
+            && m.Sender.UserName == CurrentUsername && m.SenderDelete == false)
             .OrderBy(m =>m.MessageSent)
             .ToListAsync();
 
-            var unreadMsg = Messages.Where(m => m.DateRead == null && m.Recipient.Username == CurrentUsername).ToList();
+            var unreadMsg = Messages.Where(m => m.DateRead == null && m.Recipient.UserName == CurrentUsername).ToList();
             if(unreadMsg.Any())
             {
                 foreach (var item in unreadMsg)

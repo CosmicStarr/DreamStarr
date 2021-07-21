@@ -1,11 +1,12 @@
 
 
+using System.Threading.Tasks;
 using StarrAPI.Models;
 
 namespace StarrAPI.InterfacesandClasses
 {
     public interface ITokenService
     {
-        string CreateToken(AppUser appUser);
+        Task<string> CreateToken(AppUser appUser);
     }
 }

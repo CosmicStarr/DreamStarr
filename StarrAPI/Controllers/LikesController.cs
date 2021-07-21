@@ -33,16 +33,16 @@ namespace StarrAPI.Controllers
             var sourceUser = await _likesRepository.GetUserWithLikes(sourceUserId);
 
             if(likedUser == null) return NotFound();
-            if(sourceUser.Username == Username) return BadRequest("Liking yourself is not allowed!");
+            if(sourceUser.UserName == Username) return BadRequest("Liking yourself is not allowed!");
 
-            var userlike = await _likesRepository.GetUserLikes(sourceUserId,likedUser.UserId);
+            var userlike = await _likesRepository.GetUserLikes(sourceUserId,likedUser.Id);
 
             if(userlike != null) return BadRequest("You cannot like someone twice!");
 
             userlike = new UserLikes
             {
                 SourceUserId = sourceUserId,
-                LikedUserId = likedUser.UserId
+                LikedUserId = likedUser.Id
             };
 
             sourceUser.LikedUsers.Add(userlike);

@@ -6,7 +6,7 @@ namespace StarrAPI.Models
     public class Messages
     {
         [Key]
-        public int Messageid { get; set; }
+        public int MessageId { get; set; }
         public int SenderId { get; set; }
         public string SenderUserName { get; set; }
         public AppUser Sender { get; set; }

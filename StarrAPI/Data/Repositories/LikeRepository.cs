@@ -25,7 +25,7 @@ namespace StarrAPI.Data.Repositories
 
         public async Task<PagerList<LikeDTO>> GetUserLikes(LikeParams likeParams)
         {
-           var Users = _Context.GetAppUsers.OrderBy(u => u.Username).AsQueryable();
+           var Users = _Context.Users.OrderBy(u => u.UserName).AsQueryable();
            var Likes = _Context.Likes.AsQueryable();
            if(likeParams.Predicate == "Liked")
            {
@@ -44,20 +44,20 @@ namespace StarrAPI.Data.Repositories
 
            var LikedUsers = Users.Select(a => new LikeDTO
            {
-               Username = a.Username,
+               Username = a.UserName,
                AlsoKnownAs = a.AlsoKnownAs,
                Age = a.DateOfBirth.CalulateAge(),
                PhotoUrl = a.Photos.FirstOrDefault(p =>p.MainPic).PhotoUrl,
                City = a.City,
-               Id = a.UserId
+               Id = a.Id
            });
            return await PagerList<LikeDTO>.CreateAsync(LikedUsers,likeParams.PageNumber,likeParams.PageSize);
         }
 
         public async Task<AppUser> GetUserWithLikes(int userId)
         {
-            return await _Context.GetAppUsers.Include(x => x.LikedUsers)
-            .FirstOrDefaultAsync(x => x.UserId == userId);
+            return await _Context.Users.Include(x => x.LikedUsers)
+            .FirstOrDefaultAsync(x => x.Id == userId);
         }
     }
 }

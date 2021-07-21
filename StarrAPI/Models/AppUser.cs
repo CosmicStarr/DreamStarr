@@ -1,17 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using StarrAPI.Extensions;
+using Microsoft.AspNetCore.Identity;
+
 
 namespace StarrAPI.Models
 {
-    public class AppUser
+    public class AppUser:IdentityUser<int>
     {
-        [Key]
-        public int UserId { get; set; }
-        public string Username { get; set; }        
-        public byte[] PasswordHash { get; set; }        
-        public byte[] PasswordSalt { get; set; }
         public DateTime DateOfBirth { get; set; }
         public string AlsoKnownAs { get; set; } 
         public DateTime ProfileCreated { get; set; } = DateTime.Now;
@@ -29,6 +25,7 @@ namespace StarrAPI.Models
         public ICollection<UserLikes> LikedUsers { get; set; }
         public ICollection<Messages> MessagesSent { get; set; }
         public ICollection<Messages> MessagesReceived { get; set; }
+        public ICollection<AppUserRole> ListOfAppUserRole { get; set; }
 
     }
 }

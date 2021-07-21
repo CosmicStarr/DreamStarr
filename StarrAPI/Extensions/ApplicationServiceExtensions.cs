@@ -6,6 +6,7 @@ using StarrAPI.Data;
 using StarrAPI.Data.Interfaces;
 using StarrAPI.Data.Repositories;
 using StarrAPI.InterfacesandClasses;
+using StarrAPI.SignalR;
 
 namespace StarrAPI.Extensions
 {
@@ -15,6 +16,7 @@ namespace StarrAPI.Extensions
         {
             services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
             services.AddScoped<IPhotoUpload,PhotoService>();
+            services.AddSingleton<PresentTracker>();
             services.AddScoped<IMessagesRepository,MessageRepository>();
             services.AddScoped<ILikesRepository,LikeRepository>();
             services.AddScoped<LogUserActivity>();

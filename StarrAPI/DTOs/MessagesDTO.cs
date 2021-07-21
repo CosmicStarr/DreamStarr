@@ -4,7 +4,7 @@ namespace StarrAPI.DTOs
 {
     public class MessagesDTO
     {
-         public int Messageid { get; set; }
+         public int MessageId { get; set; }
         public int SenderId { get; set; }
         public string SenderUserName { get; set; }
         public string SenderPhotoUrl { get; set; }

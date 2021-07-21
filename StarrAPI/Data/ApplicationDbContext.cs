@@ -1,22 +1,37 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using StarrAPI.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace StarrAPI.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<AppUser,AppRole,int,
+    IdentityUserClaim<int>,AppUserRole,IdentityUserLogin<int>,IdentityRoleClaim<int>,IdentityUserToken<int>>
     {  
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
             
         }
 
-        public DbSet<AppUser> GetAppUsers { get; set; } 
+   
         public DbSet<UserLikes> Likes { get; set; }
         public DbSet<Messages> Messages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.Entity<AppUser>()
+            .HasMany(r => r.ListOfAppUserRole)
+            .WithOne(r => r.AppUser)
+            .HasForeignKey(r =>r.UserId)
+            .IsRequired();
+
+            builder.Entity<AppRole>()
+            .HasMany(r => r.ListOfAppUserRole)
+            .WithOne(r => r.AppRole)
+            .HasForeignKey(r =>r.RoleId)
+            .IsRequired();
 
             builder.Entity<UserLikes>()
             .HasKey(k => new{ k.SourceUserId,k.LikedUserId});

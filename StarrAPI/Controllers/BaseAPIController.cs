@@ -5,7 +5,7 @@ namespace StarrAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [ServiceFilter(typeof(LogUserActivity))]
+    // [ServiceFilter(typeof(LogUserActivity))]
     public class BaseAPIController:ControllerBase
     {
         

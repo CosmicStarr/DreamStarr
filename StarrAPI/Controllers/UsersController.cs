@@ -31,12 +31,13 @@ namespace StarrAPI.Controllers
 
         }
 
+     
         [HttpGet]
         //[AllowAnonymous]
         public async Task<ActionResult<IEnumerable<MemberDTO>>> GetUsers([FromQuery]UserParams userParams)
         {
             var user = await _userRepository.GetUserByUsernameAsync(User.GetUsername());
-            userParams.CurrentUsername = user.Username;
+            userParams.CurrentUsername = user.UserName;
             if(string.IsNullOrEmpty(userParams.Gender))
                 userParams.Gender = user.Gender == "male"?"female":"male";
             var users = await _userRepository.GetMembersDTOAsync(userParams);
@@ -89,7 +90,7 @@ namespace StarrAPI.Controllers
             //if when the "SaveAllAsync" is called, i want to map the info to my PhotosDTO
             if(await _userRepository.SaveAllAsync())
             {
-                return CreatedAtRoute("GetUser",new {Username = user.Username},_Mapper.Map<PhotosDTO>(Picture));
+                return CreatedAtRoute("GetUser",new {Username = user.UserName},_Mapper.Map<PhotosDTO>(Picture));
             }
             
             //if everything failed i want to display this message.
