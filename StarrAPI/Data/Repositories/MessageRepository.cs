@@ -22,6 +22,12 @@ namespace StarrAPI.Data.Repositories
             _Context = Context;
 
         }
+
+        public void AddGroup(Group group)
+        {
+            _Context.GetGroups.Add(group);
+        }
+
         public void AddMessage(Messages message)
         {
             _Context.Messages.Add(message);
@@ -30,6 +36,24 @@ namespace StarrAPI.Data.Repositories
         public void DeleteMessage(Messages messages)
         {
             _Context.Messages.Remove(messages);
+        }
+
+        public async Task<Connections> GetConnections(string ConnectionId)
+        {
+           return await _Context.GetConnections.FirstOrDefaultAsync(c => c.ConnectionId == ConnectionId);
+        }
+
+        public async Task<Group> GetGroup(string GroupName)
+        {
+            return await _Context.GetGroups.Include(c =>c.Connections).FirstOrDefaultAsync(c => c.GroupName == GroupName);
+        }
+
+        public async Task<Group> GetGroupForConnection(string ConnectionId)
+        {
+           return await _Context.GetGroups
+           .Include(c =>c.Connections)
+           .Where(c => c.Connections.Any(x =>x.ConnectionId == ConnectionId))
+           .FirstOrDefaultAsync();
         }
 
         public async Task<Messages> GetMessage(int Id)
@@ -73,12 +97,17 @@ namespace StarrAPI.Data.Repositories
             {
                 foreach (var item in unreadMsg)
                 {
-                    item.DateRead = DateTime.Now;
+                    item.DateRead = DateTime.UtcNow;
                 }
                 await _Context.SaveChangesAsync();
             }
 
             return _mapper.Map<IEnumerable<MessagesDTO>>(Messages);
+        }
+
+        public void RemoveConnection(Connections connection)
+        {
+            _Context.GetConnections.Remove(connection);
         }
 
         public async Task<bool> SaveAllAsync()

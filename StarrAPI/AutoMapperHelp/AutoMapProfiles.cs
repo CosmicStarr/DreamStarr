@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using AutoMapper;
 using StarrAPI.DTOs;
@@ -18,6 +19,7 @@ namespace StarrAPI.AutoMapperHelp
             CreateMap<Messages,MessagesDTO>()
             .ForMember(d => d.SenderPhotoUrl,o => o.MapFrom(s => s.Sender.Photos.FirstOrDefault(x => x.MainPic).PhotoUrl))
             .ForMember(d => d.RecipientPhotoUrl,o => o.MapFrom(s => s.Recipient.Photos.FirstOrDefault(x => x.MainPic).PhotoUrl));
+            CreateMap<DateTime,DateTime>().ConvertUsing(d => DateTime.SpecifyKind(d, DateTimeKind.Utc));
         }
     }
 }

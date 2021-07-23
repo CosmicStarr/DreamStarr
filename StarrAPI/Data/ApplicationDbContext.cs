@@ -16,6 +16,8 @@ namespace StarrAPI.Data
    
         public DbSet<UserLikes> Likes { get; set; }
         public DbSet<Messages> Messages { get; set; }
+        public DbSet<Group> GetGroups { get; set; } 
+        public DbSet<Connections> GetConnections { get; set; } 
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
